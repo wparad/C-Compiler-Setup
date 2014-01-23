@@ -14,15 +14,14 @@
  */
 int main() {
 
-	node* list[100];
+	hashtable h1;
 	int i = 0;
-	for(i = 0; i < 100; i++) { list[i] = NULL; }
-    hashtable h1 = {list};
+	for(i = 0; i < CAPACITY; i++) { h1.list[i] = NULL;
+	}
     unsigned long test = 0;
     int x = 0;
 
-	
-   x = hash("cat",&test);
+	x = hash("cat",&test);
    if (x == 1) printf("%ld \n",test);
 
     x = hash("dog",&test);
@@ -40,6 +39,6 @@ int main() {
 	
 	printf("DONE");
     
-    return (0);
+    return 0;
 }
 

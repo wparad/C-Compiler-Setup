@@ -9,7 +9,7 @@ struct Node {
 
 typedef struct Hashtable hashtable;
 struct Hashtable {
-  node** list; // "buckets" of linked lists
+  node* list[CAPACITY]; // "buckets" of linked lists
 };
 
 /* Function prototypes */
