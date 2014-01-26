@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "header.h"
 
-
 /*
  * 
  */
@@ -48,66 +47,59 @@ int main(int argc, char *argv[] ) {
   
     unsigned int length = 3;                        //set the initial length of the hashtable array
   
-        char userinput1[250];										//for the first file name
-        char userinput2[250];										//for the second file name
+	char userinput1[250];										//for the first file name
+	char userinput2[250];										//for the second file name
+	char file_word[257];
     FILE *src_file1;											//pointer for link to first file
-    FILE *src_file2;											//pointer for link to second file
-    int count = 0;
-        printf("Please enter the name of the first file\n");		
-        scanf("%s", userinput1);									//get input for first file
-    src_file1 = fopen(userinput1, "rb");						//link first file
- //   src_file1 = fopen(argv[1], "rb");						//link first file
-    if(src_file1 == NULL) return 1;								//if file doesn't link, return error 1
-        printf("Please enter the name of the second file\n");		
-        scanf("%s", userinput2);									//get input for second file
-        
-  src_file2 = fopen(userinput2,"rb");
-  //  src_file2 = fopen(argv[2], "rb");						//link second file
-    if(src_file2 == NULL) return 1;								//if file doesn't link, return error 1
-			
-  
-    //create a hashtable
-    hashtable* h1 = NULL;
-    create_hashtable(h1, length);    
-    
-    char file_word[257];										//for getting words from file //assumes max word is 257 characters
+	printf("Please enter the name of the first file\n");
+	scanf("%s", userinput1);
+	printf("Please enter the name of the second file\n");
+	scanf("%s", userinput2);									//get input for second file
+
+    //userinput1
+	src_file1 = fopen("/home/warren/.bashrc", "rb");				//link first file
+	if(src_file1 == NULL) { return 1; }								//if file doesn't link, return error 1
+
+	//create a hashtable
+	hashtable* h1 = create_hashtable(length);
+
     while (fscanf(src_file1, "%s", file_word) != EOF){			//get next word and continue until end of file
         put(file_word,h1);										//call put on hashtable 1
         //printf("word: %s\n", file_word);
         }
+    fclose(src_file1);  //close opened files
+
+    //userinput2 = ;
+    src_file1 = fopen("/home/warren/.bashrc","rb");
+	if(src_file1 == NULL) return 1;								//if file doesn't link, return error 1
 
     //create hashtable 2
-    hashtable* h2 = NULL;
-    create_hashtable(h2, length);    
+    hashtable* h2 = create_hashtable(length);
     
-    while (fscanf(src_file2, "%s", file_word) != EOF){			//get next word and continue until end of file
+    while (fscanf(src_file1, "%s", file_word) != EOF){			//get next word and continue until end of file
         put(file_word,h2);										//call put on hashtable 2
         //printf("word: %s\n", file_word);
     }
+    fclose(src_file1);
+
 	int matches = 0;											//int to determine matches between file 1 and 2
 	node* one = NULL;											//for iterating through hashtable 1
-	node* two = NULL;											//for iterating through hashtable 2
     int i = 0;
-	for(i=0; i<(h1->length); i++){									//for all buckets in the hashtable
+	for(i=0; i < h1->length; i++){									//for all buckets in the hashtable
 		one = h1->list[i];										//one is the first node in that bucket
 		while (one != NULL) {									//while there exists another node
-          if (one->value != NULL) {matches = matches + get(one->value,h2);}		//if there is a value at that node, and that value is in hashtable 2, increment
+          matches += get(one->value, h2);		//if there is a value at that node, and that value is in hashtable 2, increment
           one = one->next;															//move to next node
 		}
 	}
+
 	printf("The number of matches is %d",matches);				
 
-    fclose(src_file1);                                              //close opened files
-    fclose(src_file2);
-    //i = delete_hashtable(h1);
-    
-    //printf("Did the first hash delete? %d\n",i);
-    //i = delete_hashtable(h2);
-    //printf("Did the second hash delete? %d\n",i);
-    scanf("%s",userinput1);										//to be deleted - so it doesn't close console while i am looking at it
-	return 0;
+    delete_hashtable(h1);
+    delete_hashtable(h2);
 
-  //  } 
+    scanf("%s", userinput2);
+    return 0;
 }
 
 

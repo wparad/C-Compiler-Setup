@@ -138,8 +138,8 @@ int resize(hashtable *h, unsigned int capacity){
 	}
 
 	//Assume success
-	hashtable *hTmp = NULL;
-	if (create_hashtable(hTmp, capacity) == 0) return 0;
+	hashtable *hTmp = create_hashtable(capacity);
+	if (hTmp == NULL) return 0;
 	node** ptr = NULL;
 	node* innerPtr = NULL;
 	for(ptr = hTmp->list; ptr != NULL; ptr++) {
@@ -156,19 +156,18 @@ int resize(hashtable *h, unsigned int capacity){
 	return 1;
 }
 
-int create_hashtable(hashtable* hstar, unsigned int capacity){
-  if(hstar != NULL) return 1;
-  hstar = malloc(sizeof(hashtable));
+hashtable* create_hashtable(unsigned int capacity){
+  hashtable* hstar = malloc(sizeof(hashtable));
   node** array = malloc(capacity*sizeof(node*));
   if (array == NULL) {
     printf("malloc error");
-    return 1;
+    return NULL;
   }
   int i = 0;													
   for(i = 0; i < capacity; i++) { array[i] = NULL; }		//fill the buckets with all NULL values
   hstar->list = array;
   hstar->length = capacity;
-  return 0;
+  return hstar;
 }
 
 

@@ -42,6 +42,6 @@ int put(char *, hashtable *);
 int get(char *, hashtable *);
 int check_capacity(hashtable *);
 int delete_hashtable(hashtable*);
-int create_hashtable(hashtable*, unsigned int capacity);
+hashtable* create_hashtable(unsigned int capacity);
 int resize(hashtable *h, unsigned int capacity);
 
