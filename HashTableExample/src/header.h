@@ -44,5 +44,4 @@ int check_capacity(hashtable *);
 int delete_hashtable(hashtable*);
 int create_hashtable(hashtable*, unsigned int capacity);
 int resize(hashtable *h, unsigned int capacity);
-int update_length(unsigned int);
 

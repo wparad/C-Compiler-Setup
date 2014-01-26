@@ -66,8 +66,8 @@ int main(int argc, char *argv[] ) {
     if(src_file2 == NULL) return 1;								//if file doesn't link, return error 1
 			
   
-    hashtable hash1;												//create a hashtable
-    hashtable* h1 = &hash1;
+    //create a hashtable
+    hashtable* h1 = NULL;
     create_hashtable(h1, length);    
     
     char file_word[257];										//for getting words from file //assumes max word is 257 characters
@@ -76,8 +76,8 @@ int main(int argc, char *argv[] ) {
         //printf("word: %s\n", file_word);
         }
 
-    hashtable hash2;												//create hashtable 2
-    hashtable* h2 = &hash2;
+    //create hashtable 2
+    hashtable* h2 = NULL;
     create_hashtable(h2, length);    
     
     while (fscanf(src_file2, "%s", file_word) != EOF){			//get next word and continue until end of file

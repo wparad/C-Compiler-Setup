@@ -13,7 +13,7 @@
  * Return 1 if successful, and 0 if an error occurred 
  * (e.g. if the string is null).
  */
-int hash(char *string, unsigned long *value)							//to determine to which bucket in a hashtable a string belongs 
+int hash(char *string, unsigned long *value)							//to determine to which bucket in a hashtable a string belongs
 {
     if (string == NULL || value == NULL) return 0;						//check there is something worth looking at return 0 if error
     long int sum = 0;													//int for a hash value
@@ -24,7 +24,7 @@ int hash(char *string, unsigned long *value)							//to determine to which bucke
         sum = sum + ascii_value*i;                                      //formula for hash value
         //sum += ascii_value;
     }
-    (*value) = sum%CAPACITY;           									//mod it so that it fits in our buckets
+    (*value) = sum;           									//mod it so that it fits in our buckets
     //(*value) = 1;
     return 1;															//return 1 if successful
 }
@@ -45,15 +45,16 @@ int put(char *string, hashtable *h)										//for putting a word into the hasht
    if(string == NULL ||strlen(string) == 0 || h == NULL || get(string, h) == 1) return 0;		//check that there is a word and a hashtable and that the word is not already in the hashtable
    int check = 0;	
    unsigned long val = 0;												//where the hash value will be stored
-   check = hash(string, &val);											//perform hash
+   check = hash(string, &val);										//perform hash
+   val %= h->length;
    if (check == 0) return 0;											//if there is a hash error, return 0 for error
-   if (!(val >=0 && val <=(CAPACITY-1))) return 0;						//a second check that val is within the correct range -- this should be able to be deleted
+   if (!(val >=0 && val <=(h->length-1))) return 0;						//a second check that val is within the correct range -- this should be able to be deleted
    node* recur_node = h->list[val];										//node point to head of correct bucket
    node* point = malloc(sizeof(node));									//create node in the heap
-       if (point == NULL) {												//if there was an error allocating memory
-           fprintf(stderr, "ERROR: create_node: malloc failed:");
-           return 0;													//return error 0
-       }
+   if (point == NULL) {												//if there was an error allocating memory
+	   fprintf(stderr, "ERROR: create_node: malloc failed:");
+	   return 0;													//return error 0
+   }
    point->next = NULL;													//initialize the pointer->next value to NULL
            
    int size = strlen(string);							//find the size of the given string
@@ -87,8 +88,9 @@ int get(char *string, hashtable *h){									//for determine if the value alread
     int check = 0;
     char* temp;															//used because I wasn't sure if strcpy could handle the -> syntax
     check = hash(string, &val);											//find the hash value for the string
+    val %= h->length;
     if (check == 0) return 0;											//if there was a problem in the hash function return 0 for error
-    if (!(val >=0 && val <=(CAPACITY-1))) return 0;						//a second check that val is within the correct range -- this should be able to be deleted
+    if (!(val >=0 && val <=(h->length-1))) return 0;						//a second check that val is within the correct range -- this should be able to be deleted
     node* recur_node = h->list[val];									//set the pointer to the head of this bucket
     int final = 0;														//initialize the return value
 
@@ -114,7 +116,7 @@ int delete_hashtable(hashtable* h){
   node* recur_node2 = NULL;
   char* string = NULL;
   
-  for(i = 0; i<CAPACITY; i++) {
+  for(i = 0; i<h->length; i++) {
     recur_node = h->list[i];
     while(recur_node != NULL){
       recur_node2 = recur_node->next;
@@ -124,23 +126,41 @@ int delete_hashtable(hashtable* h){
       recur_node = recur_node2;
     }
   }
+  free(h);
   return 1;
 }
 
 
 int resize(hashtable *h, unsigned int capacity){
-  update_length(capacity);
-  
-  
-}
+	if (h == NULL) {												//if there was an error allocating memory
+	   fprintf(stderr, "ERROR: resize failed:");
+	   return 0;													//return error 0
+	}
 
-int update_length(unsigned int cap){
-  
+	//Assume success
+	hashtable *hTmp = NULL;
+	if (create_hashtable(hTmp, capacity) == 0) return 0;
+	node** ptr = NULL;
+	node* innerPtr = NULL;
+	for(ptr = hTmp->list; ptr != NULL; ptr++) {
+		for(innerPtr = ptr[0]; innerPtr != NULL ;innerPtr++){
+			if(put(innerPtr->value, hTmp) == 0) {
+				delete_hashtable(hTmp);
+				return 0;
+			}
+		}
+	}
+
+	delete_hashtable(h);
+	h = hTmp;
+	return 1;
 }
 
 int create_hashtable(hashtable* hstar, unsigned int capacity){
-  node* array = malloc(capacity*sizeof(node*)+1);
-  if (array = NULL) {
+  if(hstar != NULL) return 1;
+  hstar = malloc(sizeof(hashtable*));
+  node** array = malloc(capacity*sizeof(node*));
+  if (array == NULL) {
     printf("malloc error");
     return 1;
   }
