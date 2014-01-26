@@ -158,7 +158,7 @@ int resize(hashtable *h, unsigned int capacity){
 
 int create_hashtable(hashtable* hstar, unsigned int capacity){
   if(hstar != NULL) return 1;
-  hstar = malloc(sizeof(hashtable*));
+  hstar = malloc(sizeof(hashtable));
   node** array = malloc(capacity*sizeof(node*));
   if (array == NULL) {
     printf("malloc error");
