@@ -56,8 +56,7 @@ int main(int argc, char *argv[] ) {
 	printf("Please enter the name of the second file\n");
 	scanf("%s", userinput2);									//get input for second file
 
-    //userinput1
-	src_file1 = fopen("/home/warren/.bashrc", "rb");				//link first file
+	src_file1 = fopen(userinput1, "rb");				//link first file
 	if(src_file1 == NULL) { return 1; }								//if file doesn't link, return error 1
 
 	//create a hashtable
@@ -65,12 +64,10 @@ int main(int argc, char *argv[] ) {
 
     while (fscanf(src_file1, "%s", file_word) != EOF){			//get next word and continue until end of file
         put(file_word,h1);										//call put on hashtable 1
-        //printf("word: %s\n", file_word);
-        }
+	}
     fclose(src_file1);  //close opened files
 
-    //userinput2 = ;
-    src_file1 = fopen("/home/warren/.bashrc","rb");
+    src_file1 = fopen(userinput2,"rb");
 	if(src_file1 == NULL) return 1;								//if file doesn't link, return error 1
 
     //create hashtable 2
@@ -78,7 +75,6 @@ int main(int argc, char *argv[] ) {
     
     while (fscanf(src_file1, "%s", file_word) != EOF){			//get next word and continue until end of file
         put(file_word,h2);										//call put on hashtable 2
-        //printf("word: %s\n", file_word);
     }
     fclose(src_file1);
 
