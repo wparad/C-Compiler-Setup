@@ -143,7 +143,7 @@ int resize(hashtable *h, unsigned int capacity){
 	node** ptr = NULL;
 	node* innerPtr = NULL;
 	for(ptr = hTmp->list; ptr != NULL; ptr++) {
-		for(innerPtr = ptr[0]; innerPtr != NULL ;innerPtr++){
+		for(innerPtr = ptr[0]; innerPtr != NULL ;innerPtr = innerPtr->next){
 			if(put(innerPtr->value, hTmp) == 0) {
 				delete_hashtable(hTmp);
 				return 0;
