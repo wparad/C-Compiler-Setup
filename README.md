@@ -4,6 +4,8 @@ C-Compiler-Setup
 Programs related to creating a C compiler.
 
 Current Changes:
+----------------
+
     HashTables declared not as pointer are technically a memory leak.  Since we
     never created them anywhere but main it shouldn't have been a problem, but we
     should be consistent.
